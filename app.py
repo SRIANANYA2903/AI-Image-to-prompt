@@ -65,11 +65,11 @@ st.write("Upload an image and let AI generate a masterpiece-level prompt for rec
 # 5. Load Model Function (Cached)
 @st.cache_resource
 def load_model():
-    # Progress bar and status indicator for better UX
+    # Inga 4 spaces kandippa irukkanum
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-   device = "cuda" if torch.cuda.is_available() else "cpu"
-model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
-    return processor, model
+    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
+    return processor, model, device
 
 # 6. Main Layout (Two Columns)
 col1, col2 = st.columns([1, 1], gap="large")
