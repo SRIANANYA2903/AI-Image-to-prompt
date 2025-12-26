@@ -13,8 +13,8 @@ st.markdown("""
     .prompt-box {
         padding: 25px;
         border-radius: 15px;
-        background-color: #ffffff; 
-        color: #000000;            
+        background-color: #ffffff;
+        color: #000000;
         border-left: 10px solid #2e7d32;
         font-size: 18px;
         font-weight: 500;
@@ -53,9 +53,10 @@ with st.sidebar:
 st.title("✨ AI Image to Hyper-Realistic Prompt")
 st.write("Upload an image and let AI generate a masterpiece-level prompt.")
 
-# 5. Load Model Function (Cached) - Corrected Indentation
+# 5. Load Model Function (GPU-to-CPU Auto-switch)
 @st.cache_resource
 def load_model():
+    # Detect if GPU is available, otherwise use CPU
     device = "cuda" if torch.cuda.is_available() else "cpu"
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
@@ -75,21 +76,23 @@ with col2:
     st.subheader("🤖 AI Generation Results")
     if uploaded_file:
         if st.button('🚀 GENERATE REALISTIC PROMPT'):
-            with st.spinner('Analyzing details...'):
-                # Model Inference
+            with st.spinner('AI is analyzing details...'):
+                # Model Inference using the detected device
                 processor, model, device = load_model()
                 inputs = processor(image, return_tensors="pt").to(device)
                 out = model.generate(**inputs, max_new_tokens=65)
                 base_caption = processor.decode(out[0], skip_special_tokens=True)
-                
-                # Masterpiece Prompt
+
+                # Advanced Prompt Engineering
                 masterpiece_prompt = (
                     f"**Hyper-realistic professional photography of** {base_caption}. "
-                    "Cinematic lighting, 8k resolution, photorealistic masterpiece."
+                    "Incredibly detailed textures, cinematic atmospheric lighting, masterpiece, photorealistic."
                 )
 
+                # Results Display
                 st.markdown("### 🔥 Masterpiece Prompt")
                 st.markdown(f'<div class="prompt-box">{masterpiece_prompt}</div>', unsafe_allow_html=True)
+                st.warning("**Negative Prompt:** blurry, low quality, distorted, text, watermark")
                 st.success("✅ Complete!")
     else:
         st.info("Waiting for image upload...")
