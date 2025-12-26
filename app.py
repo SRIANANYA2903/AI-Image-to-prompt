@@ -6,54 +6,61 @@ from PIL import Image
 # 1. Page Configuration
 st.set_page_config(page_title="AI Vision Prompt Pro", page_icon="🎨", layout="wide")
 
-# 2. Advanced Professional CSS (Matching the UI Image)
+# 2. Modern UI Design CSS (Matching your reference image)
 st.markdown("""
     <style>
-    /* Main Background and Fonts */
-    .main { background-color: #f0f2f6; color: #1e1e1e; font-family: 'Inter', sans-serif; }
-    
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] { background-color: #1e1e2f; color: white; }
-    
-    /* Card-like Containers */
-    .stColumn {
-        background-color: white;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
+    /* Main Background Gradient */
+    .main {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 50%, #ff7eb3 100%);
+        color: white;
     }
     
-    /* Header Styling */
-    h1 { color: #1e1e2f; font-weight: 800; letter-spacing: -1px; }
-    
-    /* Output Box Styling (Professional White with Border) */
-    .prompt-box {
-        padding: 20px;
-        border-radius: 12px;
-        background-color: #f8f9fa;
-        color: #2c3e50;
-        border: 1px dashed #2e7d32;
-        font-size: 15px;
-        line-height: 1.6;
-        margin-top: 10px;
+    /* Modern Card Styling */
+    div[data-testid="stVerticalBlock"] > div:has(div.stMarkdown) {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+        color: #333;
     }
 
-    /* Button Styling */
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #1e1e2f;
+    }
+    .sidebar-text { color: white; font-weight: 600; }
+
+    /* Titles */
+    h1, h2, h3 { color: white !important; text-align: center; font-weight: 800; }
+    .card-title { color: #1e1e2f !important; font-weight: 700; font-size: 22px; margin-bottom: 15px; }
+
+    /* Button Design */
     .stButton>button {
         width: 100%;
-        border-radius: 10px;
-        height: 3.5em;
-        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        border-radius: 12px;
+        height: 3em;
+        background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
         color: white;
-        font-weight: 600;
+        font-weight: bold;
         border: none;
-        box-shadow: 0px 4px 10px rgba(46, 125, 50, 0.2);
+        transition: 0.3s;
+    }
+    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0px 5px 15px rgba(0,0,0,0.3); }
+
+    /* Prompt Box */
+    .ultra-prompt-box {
+        background-color: #fdfdfd;
+        border-left: 5px solid #ff7eb3;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #444;
+        line-height: 1.6;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Model Loading (Safe for Streamlit Cloud)
+# 3. Load Model (CPU/GPU Auto-detect)
 @st.cache_resource
 def load_model():
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -61,66 +68,53 @@ def load_model():
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
     return processor, model, device
 
-# 4. Sidebar Content
+# 4. Sidebar - Project Dashboard
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103633.png", width=80)
-    st.title("Project Dashboard")
+    st.markdown("<h2 style='color:white;'>👤 Project Dashboard</h2>", unsafe_allow_html=True)
     st.markdown("---")
-    st.write("📂 **Model:** BLIP Vision")
-    st.write("🎯 **Task:** Hyper-Detail Gen")
-    st.write("⚡ **Status:** Ready")
-    st.divider()
-    st.caption("AI-Powered Prompt Engineering System")
+    st.info("**Model:** BLIP-AI")
+    st.info("**Category:** Image-to-Prompt")
+    st.markdown("---")
+    st.success("New Update: Ultra-Detail Mode Active")
 
-# 5. Main UI Header
-st.markdown("<h1>✨ 🌌 AI Vision Prompt Pro</h1>", unsafe_allow_html=True)
-st.markdown("<h3>AI Image to Hyper-Detailed Prompt</h3>", unsafe_allow_html=True)
-st.write("Target an image to generate ultra-detailed prompts for AI art generators.")
-
+# 5. Header Section
+st.markdown("<h1>✨ AI Image to Ultra-Detailed Prompt</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Generate hyper-realistic, masterpiece-level prompts for AI Art Generators.</p>", unsafe_allow_html=True)
 st.divider()
 
-# 6. Layout: 2 Column Design
-col1, col2 = st.columns([1, 1], gap="large")
+# 6. Main Content - 2 Column Layout
+col1, col2 = st.columns(2, gap="large")
 
 with col1:
-    st.markdown("#### 📷 Input Image Source")
-    uploaded_file = st.file_uploader("Upload Image (JPG, PNG, JPEG)", type=["jpg", "png", "jpeg"])
-    
+    st.markdown('<p class="card-title">📷 Input Image</p>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Choose an image file...", type=["jpg", "png", "jpeg"])
     if uploaded_file:
         image = Image.open(uploaded_file).convert('RGB')
-        st.image(image, caption='Original Input Preview', use_container_width=True)
+        st.image(image, use_container_width=True, caption="Source Image Ready")
 
 with col2:
-    st.markdown("#### 🤖 AI Generation Results")
+    st.markdown('<p class="card-title">🤖 AI Generation Results</p>', unsafe_allow_html=True)
     if uploaded_file:
         if st.button('🚀 GENERATE ULTRA-DETAILED PROMPT'):
-            with st.spinner('Analyzing intricate details...'):
-                # Processing
+            with st.spinner('AI analyzing details...'):
                 processor, model, device = load_model()
                 inputs = processor(image, return_tensors="pt").to(device)
                 out = model.generate(**inputs, max_new_tokens=100)
                 base_caption = processor.decode(out[0], skip_special_tokens=True)
 
-                # --- HYPER DETAILED LOGIC (The "Magic" Prompt) ---
-                ultra_detailed_prompt = (
+                # Ultra Detailed Logic
+                masterpiece = (
                     f"**Ultra-detailed professional photography of {base_caption}.** "
                     "Every surface is rendered with incredibly fine tactile textures. "
-                    "Cinematic volumetric atmospheric lighting, high-end 85mm prime lens, "
-                    "with very soft bokeh. Shot at ISO 100 with global illumination, "
-                    "ray tracing, and rule of thirds. Professional digital art, "
-                    "Unreal Engine 5 render style with subsurface scattering on all elements."
+                    "Cinematic lighting, 85mm lens, f/1.8, global illumination, ray tracing, "
+                    "masterpiece, Unreal Engine 5 render, 8k resolution, photorealistic."
                 )
 
-                # Results Display
-                st.markdown("##### ## Masterpiece Prompt")
-                st.markdown(f'<div class="prompt-box">"{ultra_detailed_prompt}"</div>', unsafe_allow_html=True)
-                
-                st.markdown("##### 🔥 Negative Prompt")
-                st.warning("blurry, low quality, distorted, grainy, low resolution, bad anatomy, deformed limbs, out of frame")
-                
-                st.success("✅ Ready to copy!")
+                st.markdown("##### 🔥 Ultra-Prompt")
+                st.markdown(f'<div class="ultra-prompt-box">{masterpiece}</div>', unsafe_allow_html=True)
+                st.success("✅ Analysis Complete!")
     else:
-        st.info("Waiting for image upload to begin analysis...")
+        st.markdown("<p style='color:#666;'>Upload an image to see AI results here.</p>", unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("Developed by SRI ANANYA | AI Image to Prompt Generation System")
+st.caption("Developed by SRI ANANYA | Professional AI Vision System")
