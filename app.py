@@ -67,7 +67,8 @@ st.write("Upload an image and let AI generate a masterpiece-level prompt for rec
 def load_model():
     # Progress bar and status indicator for better UX
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to("cuda")
+   device = "cuda" if torch.cuda.is_available() else "cpu"
+model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
     return processor, model
 
 # 6. Main Layout (Two Columns)
@@ -87,7 +88,7 @@ with col2:
             with st.spinner('Neural Network is analyzing details...'):
                 # Model Inference
                 processor, model = load_model()
-                inputs = processor(image, return_tensors="pt").to("cuda")
+             inputs = processor(image, return_tensors="pt").to(device)
                 out = model.generate(**inputs, max_new_tokens=65)
                 base_caption = processor.decode(out[0], skip_special_tokens=True)
                 
