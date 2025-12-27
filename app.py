@@ -82,14 +82,20 @@ def load_model():
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
     return processor, model, device
 
-# 4. Sidebar Content
+# 4. Sidebar Content (Text Color Fixed to White)
 with st.sidebar:
     st.markdown("<h2 style='color:white;'>👤 Project Dashboard</h2>", unsafe_allow_html=True)
-    st.info("**Model:** BLIP Vision AI")
-    st.info("**Category:** Image-to-Prompt")
+    st.markdown("---")
+    
+    # Custom HTML for White Text Labels
+    st.markdown("<p style='color:white; margin-bottom:0px;'><b>Model:</b></p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:white; font-size:18px; margin-top:0px;'>BLIP Vision AI</p>", unsafe_allow_html=True)
+    
+    st.markdown("<p style='color:white; margin-bottom:0px;'><b>Category:</b></p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:white; font-size:18px; margin-top:0px;'>Image-to-Prompt</p>", unsafe_allow_html=True)
+    
     st.divider()
-    st.caption("Developed by SRI ANANYA")
-
+    st.markdown("<p style='color:rgba(255,255,255,0.7);'>Developed by SRI ANANYA</p>", unsafe_allow_html=True)
 # 5. Header Section
 st.markdown('<p class="main-title">✨ AI Image to Ultra-Detailed Prompt</p>', unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: white;'>Transform images into high-detail professional prompts.</p>", unsafe_allow_html=True)
